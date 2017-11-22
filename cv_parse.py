@@ -1,4 +1,5 @@
 from cv_extract import pdf_to_string
+from datetime import datetime
 from decouple import config
 
 HOME = config('HOME')
