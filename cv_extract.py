@@ -30,4 +30,4 @@ def pdf_to_string(pdf_file):
     return extracted_text
 
 
-print(pdf_to_string('cv.pdf'))
+# print(pdf_to_string('cv.pdf'))

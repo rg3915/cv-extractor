@@ -1,51 +1,28 @@
 from cv_extract import pdf_to_string
+from decouple import config
 
-texto = (pdf_to_string('cv.pdf'))
+HOME = config('HOME')
+# $HOME/Downloads/cv.pdf
+file_default = '%s/Downloads/cv.pdf' % HOME
+file_pdf = input('Digite o caminho do arquivo: ') or file_default
 
-nome = []
-data = []
-sexo = []
-endereco = []
-local = []
-estadoc = []
-cep = []
-telefone = []
-email = []
+# Transforma o texto numa lista
+_words = pdf_to_string(file_pdf).split('\n')
 
-for line in texto.split('\n'):
-    if "Nome:" in line:
-        nome.append(line.strip())
+# Remove espaços vazios nas extremidades do texto
+words = [word.strip() for word in _words]
 
-for line in texto.split('\n'):
-    if "Data de" in line:
-        data.append(line.strip())
+output = {}
 
-for line in texto.split('\n'):
-    if "Sexo:" in line:
-        sexo.append(line.strip())
 
-for line in texto.split('\n'):
-    if "Endere" in line:
-        endereco.append(line.strip())
+def is_first_name(word):
+    if word == 'Regis da Silva Santos':
+        output['first_name'] = word
+        return word
 
-for line in texto.split('\n'):
-    if "Local" in line:
-        local.append(line.strip())
 
-for line in texto.split('\n'):
-    if "Estado " in line:
-        estadoc.append(line.strip())
+for word in words:
+    if is_first_name(word):
+        words.remove(is_first_name(word))
 
-for line in texto.split('\n'):
-    if "CEP" in line:
-        cep.append(line.strip())
-
-for line in texto.split('\n'):
-    if "Telefone:" in line:
-        telefone.append(line.strip())
-
-for line in texto.split('\n'):
-    if "E-mail" in line:
-        email.append(line.strip())
-
-print(nome, data, sexo, endereco, local, estadoc, cep, telefone, email)
+print(output)
