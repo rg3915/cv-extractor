@@ -25,8 +25,12 @@ def cv_parse(cv: list) -> dict:
     intervals = make_intervals(find_topics)
 
     res = apply_intervals(cv, intervals)
+
+    # Insere uma chave 'meta' no começo da lista
     res[0].insert(0, 'meta')
+
     dic = {x[0]: x[1:] for x in res}
+
     return dic
 
 
