@@ -1,38 +1,38 @@
 from cv_extract import pdf_to_string
 from datetime import datetime
 from decouple import config
-
-HOME = config('HOME')
-# $HOME/Downloads/cv.pdf
-file_default = '%s/Downloads/cv.pdf' % HOME
-file_pdf = input('Digite o caminho do arquivo: ') or file_default
-
-# Transforma o texto numa lista
-_words = pdf_to_string(file_pdf).split('\n')
-
-# Remove espaços vazios nas extremidades do texto
-words = [word.strip() for word in _words]
-output = {}
-
-names = ['Regis da Silva Santos']
+from splitty import (
+    clear_list_strings,
+    list_by_list,
+    list_by_re_pattern,
+    find_elements,
+    make_intervals,
+    apply_intervals)
 
 
-def is_first_name(word):
-    if word in names:
-        output['first_name'] = word
-        return word
+def cv_parse(cv: list) -> dict:
+    pattern = r'(\w+|WORK EXPERIENCE|EDUCATION)'
+
+    list_pattern = list_by_re_pattern(cv, pattern)
+
+    topics = ['WORK EXPERIENCE', 'EDUCATION']
+
+    find_topics = find_elements(cv, topics)
+
+    # Inserindo o elemento no começo da lista
+    find_topics.insert(0, list_pattern[0])
+
+    intervals = make_intervals(find_topics)
+
+    res = apply_intervals(cv, intervals)
+    res[0].insert(0, 'meta')
+    dic = {x[0]: x[1:] for x in res}
+    return dic
 
 
-def is_date(word):
-    if datetime.strptime(word, '%m/%Y') == '%m/%Y':
-        output['date'] = word
-        return word
+cvs = ['cv.txt', 'cv2.txt', 'cv3.txt']
 
 
-for word in words:
-    if is_first_name(word):
-        words.remove(is_first_name(word))
-    if is_date(word):
-        words.remove(is_date(word))
-
-print(output)
+for cv in cvs:
+    with open(cv) as text:
+        print(cv_parse(clear_list_strings(text.read().split('\n'))))
