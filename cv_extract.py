@@ -30,4 +30,5 @@ def pdf_to_string(pdf_file):
     return extracted_text
 
 
-# print(pdf_to_string('cv.pdf'))
+with open('cv.txt', 'w') as f:
+    f.write(pdf_to_string('cv.pdf'))
