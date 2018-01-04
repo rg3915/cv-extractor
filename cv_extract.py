@@ -24,7 +24,7 @@ def pdf_to_string(pdf_file):
         interpreter.process_page(page)
         layout = device.get_result()
         for lt_obj in layout:
-            if isinstance(lt_obj, LTTextBox) or isinstance(lt_obj, LTTextLine):
+            if isinstance(lt_obj, (LTTextBox, LTTextLine)):
                 extracted_text += lt_obj.get_text()
 
     return extracted_text
